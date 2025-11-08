@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Carta para ti</title>
+<style>
+  :root{ --bg:#0f1724; --card:#fff; --accent:#ff6b6b; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial; }
+  body{ margin:0; min-height:100vh; display:grid; place-items:center; background: radial-gradient(circle at 20% 10%, #101724 0%, var(--bg) 40%); color:#fff; }
+  .envelope{ width:360px; perspective:1200px; }
+  .flap{ width:100%; height:220px; background:linear-gradient(180deg,#f8f6ff,#fff); border-radius:8px; box-shadow:0 12px 30px rgba(2,6,23,0.6); transform-origin:top center; transition:transform 900ms cubic-bezier(.2,.9,.2,1); cursor:pointer; position:relative; }
+  .body{ width:100%; height:180px; background:linear-gradient(180deg,#fff,#f1f5f9); border-radius:0 0 8px 8px; margin-top:-20px; padding:24px; box-shadow:inset 0 -6px 18px rgba(2,6,23,0.06); display:flex; align-items:center; justify-content:center; }
+  .letter{ width:300px; height:140px; background:white; border-radius:6px; box-shadow:0 8px 30px rgba(2,6,23,0.18); transform:translateY(10px); padding:18px; display:flex; flex-direction:column; gap:6px; }
+  .line{ opacity:0; transform:translateY(6px); transition:all 450ms ease; color:#0b1020; }
+  .small{ font-size:14px; color:#334155; }
+  .controls{ margin-top:14px; display:flex; gap:8px; justify-content:center; }
+  button{ background:var(--accent); border:none; padding:8px 12px; color:#fff; border-radius:8px; cursor:pointer; font-weight:600; }
+  .hint{ margin-top:12px; text-align:center; color:#94a3b8; font-size:13px; }
+  .flap.open{ transform:rotateX(180deg) translateY(-18px); }
+  .line.show{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+<div class="envelope" id="envelope">
+  <div class="flap" id="flap" title="Haz clic para abrir"></div>
+  <div class="body">
+    <div class="letter" id="letter">
+      <div class="line" id="l1"><strong>Hola amor,</strong></div>
+      <div class="line" id="l2">Cada día contigo es un pequeño milagro que quiero atesorar.</div>
+      <div class="line small" id="l3">He escondido una sorpresa para ti — toca "Sorpresa".</div>
+      <div class="controls">
+        <button id="musicBtn">▶ Música</button>
+        <button id="surpriseBtn">Sorpresa</button>
+      </div>
+      <div class="hint" id="hint">Haz clic en el sobre para abrir la carta.</div>
+    </div>
+  </div>
+</div>
+
+<audio id="audio" loop>
+  <!-- Coloca un archivo mp3 en la misma carpeta llamado "tema.mp3" o cambia src -->
+  <source src="tema.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const flap = document.getElementById('flap');
+const envelope = document.getElementById('envelope');
+const lines = [document.getElementById('l1'), document.getElementById('l2'), document.getElementById('l3')];
+const audio = document.getElementById('audio');
+const musicBtn = document.getElementById('musicBtn');
+const surpriseBtn = document.getElementById('surpriseBtn');
+
+flap.addEventListener('click', () => {
+  flap.classList.toggle('open');
+  if (flap.classList.contains('open')) {
+    lines.forEach((l, i) => setTimeout(()=> l.classList.add('show'), i*220));
+    document.getElementById('hint').textContent = "Presiona Sorpresa para ver algo especial.";
+  } else {
+    lines.forEach(l => l.classList.remove('show'));
+    document.getElementById('hint').textContent = "Haz clic en el sobre para abrir la carta.";
+  }
+});
+
+musicBtn.addEventListener('click', () => {
+  if (audio.paused) {
+    audio.play().catch(()=>alert('Si usas Chrome, añade un archivo "tema.mp3" en la carpeta o permite el audio.'));
+    musicBtn.textContent = '⏸ Pausar';
+  } else {
+    audio.pause();
+    musicBtn.textContent = '▶ Música';
+  }
+});
+
+surpriseBtn.addEventListener('click', ()=> {
+  alert('Revisa el bolsillo de tu chaqueta 💌\nTe amo mucho.');
+});
+</script>
+</body>
+          </html>
